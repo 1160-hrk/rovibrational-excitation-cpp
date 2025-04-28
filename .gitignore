@@ -1,0 +1,10 @@
+build/
+_skbuild/
+*.egg-info/
+*.so
+
+build/
+_skbuild/
+*.egg-info/
+*.so
+
