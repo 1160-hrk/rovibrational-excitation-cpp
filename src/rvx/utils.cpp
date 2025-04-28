@@ -1,10 +1,9 @@
-#include "rvx/lvne.hpp"
-#include <Eigen/Core>
+#include "rvx/utils.hpp"
 #include <omp.h>
 
 namespace rvx {
 
-    void initialize_eigen_threads() {
+void initialize_eigen_threads() {
     Eigen::setNbThreads(omp_get_max_threads());
 }
 
@@ -16,4 +15,4 @@ void set_eigen_num_threads(int n) {
     Eigen::setNbThreads(n);
 }
 
-}
+} // namespace rvx

@@ -1,34 +1,31 @@
-#!/bin/bash
-# ============================================
-# Development helper script for Docker container
-# ============================================
-
-set -e
+#!/usr/bin/env bash
+# dev.sh --- ローカル開発用ワンライナー
+#!/usr/bin/env bash
+set -euo pipefail
 
 SERVICE_NAME="dev"
-
-# macでも動く nproc 相当
 CPU_COUNT=$(getconf _NPROCESSORS_ONLN)
 
-echo "🔧 Starting development container: ${SERVICE_NAME} with OMP_NUM_THREADS=${CPU_COUNT}"
+echo "🔧  Launch docker-compose service=${SERVICE_NAME} (OMP_NUM_THREADS=${CPU_COUNT})"
 
-docker-compose run --rm -e OMP_NUM_THREADS=${CPU_COUNT} ${SERVICE_NAME} bash -c "
-    echo '📂 Moving into workspace...'
-    cd /workspace
+docker compose run --rm -T \
+  -e OMP_NUM_THREADS="${CPU_COUNT}" \
+  "${SERVICE_NAME}" bash -eu <<'EOSHELL'
+# ===== inside container =====
+echo "📂  cd /workspace"
+cd /workspace
 
-    echo '🏗️  Configuring and building with CMake...'
-    mkdir -p build
-    cd build
-    cmake .. || { echo '❌ CMake configuration failed.'; exit 1; }
-    make -j\$(nproc) || { echo '❌ Build failed.'; exit 1; }
+echo "🏗️   CMake configure / build"
+cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+cmake --build build -- -j"$(nproc)"
 
-    echo '✅ Build completed.'
+echo "✅  build done"
 
-    echo '🧪 Running pytest...'
-    cd /workspace
-    export PYTHONPATH=/workspace
-    pytest test/ || echo '⚠️  Tests failed, entering shell for debugging.'
+# 生成された Python 拡張を import 可能に
+export PYTHONPATH="/workspace/build/bindings:${PYTHONPATH:-}"
 
-    echo '🌀 Entering interactive shell. You can rebuild or rerun tests manually.'
-    exec bash
-"
+echo "🧪  pytest"
+pytest -q
+
+echo "🎉  all tests passed"
+EOSHELL

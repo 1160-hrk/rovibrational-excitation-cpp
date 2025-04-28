@@ -5,6 +5,7 @@
  #include <pybind11/eigen.h>
  #include <pybind11/numpy.h>
  #include <rvx/lvne.hpp>                 // ★ 旧 "propagator.hpp" から変更
+ #include "rvx/utils.hpp" 
  
  namespace py = pybind11;
  using Complex = std::complex<double>;
@@ -45,9 +46,9 @@
  }
  
  /* ------------ pybind11 module ------------ */
- PYBIND11_MODULE(fast_propagator, m)
+ PYBIND11_MODULE(lvne, m)
  {
-     m.doc() = "Fast rovibrational propagator (Liouville-von Neumann RK4)";
+     m.doc() = "Liouville–von Neumann propagators (Eigen + OpenMP)";
  
      /* Python からは rk4_lvne() で呼べるようにする */
      m.def("rk4_lvne", &rk4_lvne_adapter,
@@ -60,8 +61,8 @@
            )pbdoc");
  
      /* 便利ユーティリティ（そのまま転送） */
-     m.def("initialize_eigen_threads", &initialize_eigen_threads);
-     m.def("get_eigen_num_threads",   &get_eigen_num_threads);
-     m.def("set_eigen_num_threads",   &set_eigen_num_threads, py::arg("n"));
+     m.def("initialize_eigen_threads", &rvx::initialize_eigen_threads);
+     m.def("get_eigen_num_threads",   &rvx::get_eigen_num_threads);
+     m.def("set_eigen_num_threads",   &rvx::set_eigen_num_threads, py::arg("n"));
  }
  

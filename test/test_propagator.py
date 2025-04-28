@@ -1,5 +1,5 @@
 import numpy as np
-from fast_propagator import rk4_propagate
+from lvne import rk4_lvne as rk4_propagate
 
 def test_rk4_runs():
     dim = 2
