@@ -16,4 +16,6 @@ int  get_eigen_num_threads();
 /** Eigen に使わせたいスレッド数を設定（0 以下は無視） */
 void set_eigen_num_threads(int n);
 
+// 空きメモリ (Byte)。取得できなければ 0
+std::size_t avail_mem_bytes();
 }  // namespace rvx

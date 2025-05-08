@@ -14,3 +14,6 @@ _skbuild/
 # Egg / wheel metadata
 *.egg-info/
 dist/
+
+# cache
+.DS_Store

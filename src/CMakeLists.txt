@@ -1,8 +1,10 @@
 # src/CMakeLists.txt
 # ===== rvx_core ライブラリ =====
 file(GLOB RVX_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/rvx/*.cpp"   # アルゴリズム
-     "${CMAKE_CURRENT_SOURCE_DIR}/utils.cpp")  # 共通ユーティリティ
+     "${CMAKE_CURRENT_SOURCE_DIR}/rvx/lvne_rk4.cpp"   # リウヴィル方程式の時間発展
+     "${CMAKE_CURRENT_SOURCE_DIR}/rvx/psi_rk4.cpp"   # シュレディンガー方程式の時間発展
+     "${CMAKE_CURRENT_SOURCE_DIR}/rvx/utils.cpp"  # 共通ユーティリティ
+)
      
 add_library(rvx_core STATIC ${RVX_SOURCES})
 
